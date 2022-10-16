@@ -113,16 +113,73 @@ public class DataController : MonoBehaviour
             i++;
         }
 
+        speciesData.Add(speciesName, species);
+
         return species;
     }
 
-    public Move ParseMove(string move)
+    public Move ParseMove(string moveName)
     {
-        return null;
+        // if the species has already been parsed, return it
+        if (moveData.ContainsKey(moveName))
+            return moveData.GetValueOrDefault(moveName);
+        // or if the species isn't in the data at all, return null
+        else if (!moveDataUnparsed.ContainsKey(moveName))
+            return null;
+        // else the species hasn't been parsed yet
+
+        // regex to match only commas outside of quotes
+        // courtesy of stackoverflow https://stackoverflow.com/questions/632475/regex-to-pick-characters-outside-of-pair-of-quotes
+        string[] data = moveDataUnparsed.GetValueOrDefault(moveName).Split("(,)(?=(?:[^\"]|\"[^\"]*\")*$)");
+
+        // parse the data from the string array
+        string category = data[1];
+        Type type = (Type)Enum.Parse(typeof(Type), data[2].ToUpper());
+        int damageBase = int.Parse(data[3]);
+        string frequency = data[4];
+        int accuracy = int.Parse(data[5]);
+        string range = data[6];
+        string effects = data[7];
+
+        // create the move object
+        Move move = new Move(moveName, category, type, damageBase, frequency, accuracy, range, effects);
+
+        moveData.Add(moveName, move);
+
+        return move;
     }
 
-    public Ability ParseAbility(string ability)
+    public Ability ParseAbility(string abilityName)
     {
-        return null;
+        // if the species has already been parsed, return it
+        if (abilityData.ContainsKey(abilityName))
+            return abilityData.GetValueOrDefault(abilityName);
+        // or if the species isn't in the data at all, return null
+        else if (!abilityDataUnparsed.ContainsKey(abilityName))
+            return null;
+        // else the species hasn't been parsed yet
+
+        // regex to match only commas outside of quotes
+        // courtesy of stackoverflow https://stackoverflow.com/questions/632475/regex-to-pick-characters-outside-of-pair-of-quotes
+        string[] data = abilityDataUnparsed.GetValueOrDefault(abilityName).Split("(,)(?=(?:[^\"]|\"[^\"]*\")*$)");
+
+        // parse the data from the string array
+        string frequency = data[1];
+
+        // the way the data I have is formatted, data[2] always has just the info to the ability,
+        // but abilities could have triggers, targets, and keywords.
+        // if an ability does have one of those, it is listed in data[6]
+        // if an ability does NOT have any of those, data[6] is a pure copy of data[2]
+        string effect = data[6];
+        string effectAdd = "";
+
+        if (effect.StartsWith("Trigger|Keywords|Target"))
+            effectAdd = data[2];
+
+        Ability ability = new Ability(abilityName, frequency, effectAdd + " " + effect);
+
+        abilityData.Add(abilityName, ability);
+
+        return ability;
     }
 }
