@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,10 +21,17 @@ public class DataController : MonoBehaviour
     private Dictionary<string, string> abilityDataUnparsed = new Dictionary<string, string>();
     private Dictionary<string, Ability> abilityData = new Dictionary<string, Ability>();
 
+    // regex to match only commas outside of quotes
+    // courtesy of stackoverflow https://stackoverflow.com/questions/632475/regex-to-pick-characters-outside-of-pair-of-quotes
+    private Regex regex = new Regex(",(?=(?:[^\"]|\"[^\"]*\")*$)");
+
     // Start is called before the first frame update
     void Start()
     {
         // load file data into each of the unparsed dictionaries
+
+        // regex to match only newlines outside of quotes
+        // courtesy of stackoverflow https://stackoverflow.com/questions/632475/regex-to-pick-characters-outside-of-pair-of-quotes
 
         // load species
         foreach (string species in speciesTextData.text.Split("\n"))
@@ -33,6 +41,8 @@ public class DataController : MonoBehaviour
             speciesDataUnparsed.Add(speciesName, species);
         }
 
+        Debug.Log(speciesDataUnparsed["Eevee"]);
+
         // load moves
         foreach (string move in movesTextData.text.Split("\n"))
         {
@@ -41,6 +51,7 @@ public class DataController : MonoBehaviour
             moveDataUnparsed.Add(moveName, move);
         }
 
+        
         // load abilities
         foreach (string ability in abilitiesTextData.text.Split("\n"))
         {
@@ -54,17 +65,17 @@ public class DataController : MonoBehaviour
     {
         // if the species has already been parsed, return it
         if (speciesData.ContainsKey(speciesName))
-            return speciesData.GetValueOrDefault(speciesName);
+            return speciesData[speciesName];
         // or if the species isn't in the data at all, return null
         else if (!speciesDataUnparsed.ContainsKey(speciesName))
             return null;
         // else the species hasn't been parsed yet
 
-        // regex to match only commas outside of quotes
-        // courtesy of stackoverflow https://stackoverflow.com/questions/632475/regex-to-pick-characters-outside-of-pair-of-quotes
-        string[] data = speciesDataUnparsed.GetValueOrDefault(speciesName).Split("(,)(?=(?:[^\"]|\"[^\"]*\")*$)");
+        // split the data
+        string[] data = regex.Split(speciesDataUnparsed[speciesName]);
 
         // get the base stats
+        Debug.Log(data[1]);
         int health = int.Parse(data[1]);
         int attack = int.Parse(data[2]);
         int defense = int.Parse(data[3]);
@@ -122,15 +133,14 @@ public class DataController : MonoBehaviour
     {
         // if the species has already been parsed, return it
         if (moveData.ContainsKey(moveName))
-            return moveData.GetValueOrDefault(moveName);
+            return moveData[moveName];
         // or if the species isn't in the data at all, return null
         else if (!moveDataUnparsed.ContainsKey(moveName))
             return null;
         // else the species hasn't been parsed yet
 
-        // regex to match only commas outside of quotes
-        // courtesy of stackoverflow https://stackoverflow.com/questions/632475/regex-to-pick-characters-outside-of-pair-of-quotes
-        string[] data = moveDataUnparsed.GetValueOrDefault(moveName).Split("(,)(?=(?:[^\"]|\"[^\"]*\")*$)");
+        // split the data
+        string[] data = regex.Split(moveDataUnparsed[moveName]);
 
         // parse the data from the string array
         string category = data[1];
@@ -153,15 +163,14 @@ public class DataController : MonoBehaviour
     {
         // if the species has already been parsed, return it
         if (abilityData.ContainsKey(abilityName))
-            return abilityData.GetValueOrDefault(abilityName);
+            return abilityData[abilityName];
         // or if the species isn't in the data at all, return null
         else if (!abilityDataUnparsed.ContainsKey(abilityName))
             return null;
         // else the species hasn't been parsed yet
 
-        // regex to match only commas outside of quotes
-        // courtesy of stackoverflow https://stackoverflow.com/questions/632475/regex-to-pick-characters-outside-of-pair-of-quotes
-        string[] data = abilityDataUnparsed.GetValueOrDefault(abilityName).Split("(,)(?=(?:[^\"]|\"[^\"]*\")*$)");
+        // split the data
+        string[] data = regex.Split(abilityDataUnparsed[abilityName]);
 
         // parse the data from the string array
         string frequency = data[1];

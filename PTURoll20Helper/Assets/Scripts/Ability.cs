@@ -1,3 +1,4 @@
+[System.Serializable]
 public class Ability
 {
     public string AbilityName { get; private set; }

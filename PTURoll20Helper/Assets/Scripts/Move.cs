@@ -1,3 +1,4 @@
+[System.Serializable]
 public class Move 
 {
     public string MoveName { get; private set; }
