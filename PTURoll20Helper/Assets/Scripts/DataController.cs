@@ -41,8 +41,6 @@ public class DataController : MonoBehaviour
             speciesDataUnparsed.Add(speciesName, species);
         }
 
-        Debug.Log(speciesDataUnparsed["Eevee"]);
-
         // load moves
         foreach (string move in movesTextData.text.Split("\n"))
         {
@@ -63,6 +61,9 @@ public class DataController : MonoBehaviour
 
     public PokemonSpecies ParseSpecies(string speciesName)
     {
+        // check for null and empty
+        if (speciesName == null || speciesName.Equals(""))
+            return null;
         // if the species has already been parsed, return it
         if (speciesData.ContainsKey(speciesName))
             return speciesData[speciesName];
@@ -75,7 +76,6 @@ public class DataController : MonoBehaviour
         string[] data = regex.Split(speciesDataUnparsed[speciesName]);
 
         // get the base stats
-        Debug.Log(data[1]);
         int health = int.Parse(data[1]);
         int attack = int.Parse(data[2]);
         int defense = int.Parse(data[3]);
@@ -131,6 +131,9 @@ public class DataController : MonoBehaviour
 
     public Move ParseMove(string moveName)
     {
+        // check for null and empty
+        if (moveName == null || moveName.Equals(""))
+            return null;
         // if the species has already been parsed, return it
         if (moveData.ContainsKey(moveName))
             return moveData[moveName];
@@ -145,9 +148,9 @@ public class DataController : MonoBehaviour
         // parse the data from the string array
         string category = data[1];
         Type type = (Type)Enum.Parse(typeof(Type), data[2].ToUpper());
-        int damageBase = int.Parse(data[3]);
+        string damageBase = data[3];
         string frequency = data[4];
-        int accuracy = int.Parse(data[5]);
+        string accuracy = data[5];
         string range = data[6];
         string effects = data[7];
 
@@ -161,6 +164,9 @@ public class DataController : MonoBehaviour
 
     public Ability ParseAbility(string abilityName)
     {
+        // check for null and empty
+        if (abilityName == null || abilityName.Equals(""))
+            return null;
         // if the species has already been parsed, return it
         if (abilityData.ContainsKey(abilityName))
             return abilityData[abilityName];
