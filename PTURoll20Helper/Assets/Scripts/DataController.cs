@@ -13,14 +13,20 @@ public class DataController : MonoBehaviour
 
     // each set of data has two dictionaries
     // most of the data wont be needed, so only parse the data when it needs to be accessed, otherwise, keep it as a string
-    private Dictionary<string, string> speciesDataUnparsed = new Dictionary<string, string>();
-    private Dictionary<string, PokemonSpecies> speciesData = new Dictionary<string, PokemonSpecies>();
+    private Dictionary<string, string> speciesDataUnparsed = new Dictionary<string, string>(
+        StringComparer.InvariantCultureIgnoreCase);
+    private Dictionary<string, PokemonSpecies> speciesData = new Dictionary<string, PokemonSpecies>(
+        StringComparer.InvariantCultureIgnoreCase);
 
-    private Dictionary<string, string> moveDataUnparsed = new Dictionary<string, string>();
-    private Dictionary<string, Move> moveData = new Dictionary<string, Move>();
+    private Dictionary<string, string> moveDataUnparsed = new Dictionary<string, string>(
+        StringComparer.InvariantCultureIgnoreCase);
+    private Dictionary<string, Move> moveData = new Dictionary<string, Move>(
+        StringComparer.InvariantCultureIgnoreCase);
 
-    private Dictionary<string, string> abilityDataUnparsed = new Dictionary<string, string>();
-    private Dictionary<string, Ability> abilityData = new Dictionary<string, Ability>();
+    private Dictionary<string, string> abilityDataUnparsed = new Dictionary<string, string>(
+        StringComparer.InvariantCultureIgnoreCase);
+    private Dictionary<string, Ability> abilityData = new Dictionary<string, Ability>(
+        StringComparer.InvariantCultureIgnoreCase);
 
     // regex to match only commas outside of quotes
     // courtesy of stackoverflow https://stackoverflow.com/questions/632475/regex-to-pick-characters-outside-of-pair-of-quotes
@@ -77,6 +83,9 @@ public class DataController : MonoBehaviour
         string[] data = regex.Split(speciesDataUnparsed[speciesName])
             .Select(dataPoint => dataPoint.Trim().Trim('\"')).ToArray();
 
+        // get properly capitalized name
+        string name = data[0];
+
         // get the base stats
         int health = int.Parse(data[1]);
         int attack = int.Parse(data[2]);
@@ -91,7 +100,7 @@ public class DataController : MonoBehaviour
         Type type2 = (Type)Enum.Parse(typeof(Type), data[8].ToUpper());
 
         // create the species object
-        PokemonSpecies species = new PokemonSpecies(speciesName, baseStats, type1, type2);
+        PokemonSpecies species = new PokemonSpecies(name, baseStats, type1, type2);
 
         species.AddCapability(new Capability("Overland", int.Parse(data[9])));
         species.AddCapability(new Capability("Sky", int.Parse(data[10])));
@@ -126,7 +135,7 @@ public class DataController : MonoBehaviour
             i++;
         }
 
-        speciesData.Add(speciesName, species);
+        speciesData.Add(name, species);
 
         return species;
     }
@@ -149,6 +158,7 @@ public class DataController : MonoBehaviour
             .Select(dataPoint => dataPoint.Trim().Trim('\"')).ToArray();
 
         // parse the data from the string array
+        string name = data[0]; // get properly capitalized name
         string category = data[1];
         Type type = (Type)Enum.Parse(typeof(Type), data[2].ToUpper());
         string damageBase = data[3];
@@ -158,9 +168,9 @@ public class DataController : MonoBehaviour
         string effects = data[7];
 
         // create the move object
-        Move move = new Move(moveName, category, type, damageBase, frequency, accuracy, range, effects);
+        Move move = new Move(name, category, type, damageBase, frequency, accuracy, range, effects);
 
-        moveData.Add(moveName, move);
+        moveData.Add(name, move);
 
         return move;
     }
@@ -183,6 +193,7 @@ public class DataController : MonoBehaviour
             .Select(dataPoint => dataPoint.Trim().Trim('\"')).ToArray();
 
         // parse the data from the string array
+        string name = data[0]; // get properly capitalized name
         string frequency = data[1];
 
         // the way the data I have is formatted, data[2] always has just the info to the ability,
@@ -195,9 +206,9 @@ public class DataController : MonoBehaviour
         if (effect.StartsWith("Trigger|Keywords|Target"))
             effectAdd = data[2];
 
-        Ability ability = new Ability(abilityName, frequency, effectAdd + " " + effect);
+        Ability ability = new Ability(name, frequency, effectAdd + " " + effect);
 
-        abilityData.Add(abilityName, ability);
+        abilityData.Add(name, ability);
 
         return ability;
     }
