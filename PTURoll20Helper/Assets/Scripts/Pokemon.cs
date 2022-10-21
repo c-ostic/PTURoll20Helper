@@ -1,6 +1,5 @@
 using System.IO;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Pokemon
 {
@@ -73,14 +72,14 @@ public class Pokemon
         for(int i = 0;i < moveSet.Count;i++)
         {
             jsonStream.Write("\"Move" + (i + 1) + "\":\n");
-            jsonStream.Write(JsonUtility.ToJson(moveSet[i]) + ",\n");
+            jsonStream.Write(moveSet[i].toJson() + ",\n");
         }
 
         // write the abilities
         for (int i = 0; i < abilities.Count; i++)
         {
             jsonStream.Write("\"Ability" + (i + 1) + "\":\n");
-            jsonStream.Write(JsonUtility.ToJson(abilities[i]) + ",\n");
+            jsonStream.Write(abilities[i].toJson() + ",\n");
         }
 
         // end it off with something that goes with every pokemon (and allows me to end off without a trailing comma)

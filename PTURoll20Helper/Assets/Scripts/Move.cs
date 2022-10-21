@@ -1,6 +1,5 @@
-using UnityEngine;
+using System.IO;
 
-[System.Serializable]
 public class Move 
 {
     public string MoveName { get; private set; }
@@ -23,5 +22,30 @@ public class Move
         Accuracy = accuracy;
         Range = range;
         Effects = effects;
+    }
+
+    public string toJson()
+    {
+        // Create the connection
+        StringWriter jsonStream = new StringWriter();
+
+        // Use the connection
+        jsonStream.Write("{\n");
+        jsonStream.Write("\"Name\":\"" + MoveName + "\",");
+        jsonStream.Write("\"Type\":\"" + MoveType + "\",");
+        jsonStream.Write("\"DType\":\"" + Category + "\",");
+        jsonStream.Write("\"DB\":\"" + DamageBase + "\",");
+        jsonStream.Write("\"Freq\":\"" + Frequency + "\",");
+        jsonStream.Write("\"AC\":\"" + Accuracy + "\",");
+        jsonStream.Write("\"Range\":\"" + Range + "\",");
+        jsonStream.Write("\"Effects\":\"" + Effects + "\"");
+        jsonStream.Write("}");
+
+        string jsonString = jsonStream.ToString();
+
+        // Close the connection
+        jsonStream.Close();
+
+        return jsonString;
     }
 }
