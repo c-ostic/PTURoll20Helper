@@ -44,7 +44,7 @@ public class Pokemon
         jsonStream.Write("\"nickname\":\"" + Nickname + "\",\n");
         jsonStream.Write("\"type1\":\"" + Species.Type1 + "\",\n");
         jsonStream.Write("\"type2\":\"" + Species.Type2 + "\",\n");
-        jsonStream.Write("level:" + Level + ",\n");
+        jsonStream.Write("\"level\":" + Level + ",\n");
         jsonStream.Write("\"gender\":\"" + Gender + "\",\n");
         jsonStream.Write("\"nature\":\"" + Nature + "\",\n");
         jsonStream.Write("\"base_HP\":" + Species.BaseStats.Health + ",\n");

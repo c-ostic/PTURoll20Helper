@@ -1,6 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using TMPro;
 using System.Linq;
@@ -17,6 +16,7 @@ public class GenerationController : MonoBehaviour
     public TMP_InputField[] moveInputs;
     public TMP_InputField[] abilityInputs;
     public TextMeshProUGUI jsonTextbox;
+    public TMP_InputField filePathInput;
 
     private DataController dataController;
     private Pokemon currentPokemon;
@@ -24,6 +24,14 @@ public class GenerationController : MonoBehaviour
     void Start()
     {
         dataController = FindObjectOfType<DataController>();
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 
     public void GeneratePokemon()
@@ -105,5 +113,36 @@ public class GenerationController : MonoBehaviour
         {
             return 0;
         }
+    }
+
+    public void Save()
+    {
+        string filename;
+
+        if(!filePathInput.text.Equals("") && Directory.Exists(filePathInput.text))
+        {
+            filename = filePathInput.text;
+        }
+        else
+        {
+            filename = Application.persistentDataPath;
+        }
+
+        filename += "\\" + currentPokemon.Species.Species + DateTime.Now.ToString("yyyyMMddTHHmmss") + ".json";
+
+        //  open the file or create it for us.
+        FileStream fileConnection = new FileStream(filename, FileMode.OpenOrCreate);
+
+        // Create (wrap) another stream.
+        StreamWriter sWriter = new StreamWriter(fileConnection);
+
+        // Use connection.
+        sWriter.WriteLine(currentPokemon.toJson());
+
+        // Close connection.
+        sWriter.Close();
+
+        // Close connection.
+        fileConnection.Close();
     }
 }
