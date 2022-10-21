@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class DataController : MonoBehaviour
 {
@@ -72,8 +73,9 @@ public class DataController : MonoBehaviour
             return null;
         // else the species hasn't been parsed yet
 
-        // split the data
-        string[] data = regex.Split(speciesDataUnparsed[speciesName]);
+        // split the data and trim off any stray quotation marks
+        string[] data = regex.Split(speciesDataUnparsed[speciesName])
+            .Select(dataPoint => dataPoint.Trim('\"')).ToArray();
 
         // get the base stats
         int health = int.Parse(data[1]);
@@ -142,8 +144,9 @@ public class DataController : MonoBehaviour
             return null;
         // else the species hasn't been parsed yet
 
-        // split the data
-        string[] data = regex.Split(moveDataUnparsed[moveName]);
+        // split the data and trim off any stray quotation marks
+        string[] data = regex.Split(moveDataUnparsed[moveName])
+            .Select(dataPoint => dataPoint.Trim('\"')).ToArray();
 
         // parse the data from the string array
         string category = data[1];
@@ -175,8 +178,9 @@ public class DataController : MonoBehaviour
             return null;
         // else the species hasn't been parsed yet
 
-        // split the data
-        string[] data = regex.Split(abilityDataUnparsed[abilityName]);
+        // split the data and trim off any stray quotation marks
+        string[] data = regex.Split(abilityDataUnparsed[abilityName])
+            .Select(dataPoint => dataPoint.Trim('\"')).ToArray();
 
         // parse the data from the string array
         string frequency = data[1];
