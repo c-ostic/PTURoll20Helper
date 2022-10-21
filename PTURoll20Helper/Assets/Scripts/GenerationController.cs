@@ -8,6 +8,10 @@ using System.Linq;
 public class GenerationController : MonoBehaviour
 {
     public TMP_InputField speciesInput;
+    public TMP_InputField nicknameInput;
+    public TMP_InputField levelInput;
+    public TMP_Dropdown genderDropdown;
+    public TMP_Dropdown natureDropdown;
     public TMP_InputField allocatedHPInput;
     public TMP_InputField allocatedATKInput;
     public TMP_InputField allocatedDEFInput;
@@ -51,7 +55,11 @@ public class GenerationController : MonoBehaviour
         }
 
         // create the pokemon
-        currentPokemon = new Pokemon(species, "Amber", 10, "Male", "Cuddly",
+        currentPokemon = new Pokemon(species, 
+            nicknameInput.text, 
+            parseStat(levelInput.text), 
+            genderDropdown.options[genderDropdown.value].text, 
+            natureDropdown.options[natureDropdown.value].text,
             new StatSet(parseStat(allocatedHPInput.text),
                         parseStat(allocatedATKInput.text),
                         parseStat(allocatedDEFInput.text),
@@ -170,5 +178,15 @@ public class GenerationController : MonoBehaviour
     {
         GUIUtility.systemCopyBuffer = currentPokemon.toJson();
         guiConsole.Log("Copied to clipboard");
+    }
+
+    public void SetRandomGender()
+    {
+        genderDropdown.value = UnityEngine.Random.Range(0, genderDropdown.options.Count);
+    }
+
+    public void SetRandomNature()
+    {
+        natureDropdown.value = UnityEngine.Random.Range(0, natureDropdown.options.Count);
     }
 }
