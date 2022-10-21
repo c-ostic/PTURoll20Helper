@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 
@@ -17,13 +18,17 @@ public class GenerationController : MonoBehaviour
     public TMP_InputField[] abilityInputs;
     public TextMeshProUGUI jsonTextbox;
     public TMP_InputField filePathInput;
+    public Button saveButton;
+    public Button copyButton;
 
     private DataController dataController;
+    private GUIConsole guiConsole;
     private Pokemon currentPokemon;
 
     void Start()
     {
         dataController = FindObjectOfType<DataController>();
+        guiConsole = FindObjectOfType<GUIConsole>();
     }
 
     private void Update()
@@ -41,7 +46,7 @@ public class GenerationController : MonoBehaviour
         // if the pokemon isn't found, don't continue
         if (species == null)
         {
-            Debug.Log("No pokemon found");
+            guiConsole.Log("Pokemon \"" + speciesInput.text + "\" not found");
             return;
         }
 
@@ -72,7 +77,7 @@ public class GenerationController : MonoBehaviour
             else
             {
                 // otherwise, send a debug message
-                Debug.Log("Move " + moveText + " not found");
+                guiConsole.Log("Move " + moveText + " not found");
             }
         }
 
@@ -94,12 +99,16 @@ public class GenerationController : MonoBehaviour
             else
             {
                 // otherwise, send a debug message
-                Debug.Log("Ability " + abilityText + " not found");
+                guiConsole.Log("Ability " + abilityText + " not found");
             }
         }
 
         // set the json to the current pokemon's json
         jsonTextbox.text = currentPokemon.toJson();
+
+        guiConsole.Log("Generation of \"" + speciesInput.text + "\" complete");
+        saveButton.interactable = true;
+        copyButton.interactable = true;
     }
 
     private int parseStat(string statText)
@@ -119,16 +128,25 @@ public class GenerationController : MonoBehaviour
     {
         string filename;
 
-        if(!filePathInput.text.Equals("") && Directory.Exists(filePathInput.text))
+        if(!filePathInput.text.Equals(""))
         {
-            filename = filePathInput.text;
+            if (Directory.Exists(filePathInput.text))
+            {
+                filename = filePathInput.text;
+            }
+            else
+            {
+                filename = Application.persistentDataPath;
+                guiConsole.Log("\"" + filePathInput.text + "\" not found. Using default path");
+            }
         }
         else
         {
             filename = Application.persistentDataPath;
+            guiConsole.Log("File path not provided. Using default path");
         }
 
-        filename += "\\" + currentPokemon.Species.Species + DateTime.Now.ToString("yyyyMMddTHHmmss") + ".json";
+        filename += "\\" + currentPokemon.Species.Species + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".json";
 
         //  open the file or create it for us.
         FileStream fileConnection = new FileStream(filename, FileMode.OpenOrCreate);
@@ -144,5 +162,13 @@ public class GenerationController : MonoBehaviour
 
         // Close connection.
         fileConnection.Close();
+
+        guiConsole.Log("JSON File saved at \"" + filename + "\"");
+    }
+
+    public void CopyToClipboard()
+    {
+        GUIUtility.systemCopyBuffer = currentPokemon.toJson();
+        guiConsole.Log("Copied to clipboard");
     }
 }

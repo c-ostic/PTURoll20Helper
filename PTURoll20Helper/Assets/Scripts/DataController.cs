@@ -75,7 +75,7 @@ public class DataController : MonoBehaviour
 
         // split the data and trim off any stray quotation marks
         string[] data = regex.Split(speciesDataUnparsed[speciesName])
-            .Select(dataPoint => dataPoint.Trim('\"')).ToArray();
+            .Select(dataPoint => dataPoint.Trim().Trim('\"')).ToArray();
 
         // get the base stats
         int health = int.Parse(data[1]);
@@ -146,7 +146,7 @@ public class DataController : MonoBehaviour
 
         // split the data and trim off any stray quotation marks
         string[] data = regex.Split(moveDataUnparsed[moveName])
-            .Select(dataPoint => dataPoint.Trim('\"')).ToArray();
+            .Select(dataPoint => dataPoint.Trim().Trim('\"')).ToArray();
 
         // parse the data from the string array
         string category = data[1];
@@ -180,7 +180,7 @@ public class DataController : MonoBehaviour
 
         // split the data and trim off any stray quotation marks
         string[] data = regex.Split(abilityDataUnparsed[abilityName])
-            .Select(dataPoint => dataPoint.Trim('\"')).ToArray();
+            .Select(dataPoint => dataPoint.Trim().Trim('\"')).ToArray();
 
         // parse the data from the string array
         string frequency = data[1];
