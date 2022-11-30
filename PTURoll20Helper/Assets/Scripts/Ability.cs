@@ -32,4 +32,22 @@ public class Ability
 
         return jsonString;
     }
+
+    public override string ToString()
+    {
+        // Create the connection
+        StringWriter stringStream = new StringWriter();
+
+        // Use the connection
+        stringStream.Write("Name: " + AbilityName + "\n");
+        stringStream.Write("Freqrency: " + Frequency + "\n");
+        stringStream.Write("Info: " + Info);
+
+        string result = stringStream.ToString();
+
+        // Close the connection
+        stringStream.Close();
+
+        return result;
+    }
 }

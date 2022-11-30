@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 
 public enum Type
 {
@@ -44,5 +45,24 @@ public class PokemonSpecies
     public void AddCapability(Capability capability)
     {
         capabilities.Add(capability);
+    }
+
+    public override string ToString()
+    {
+        // Create the connection
+        StringWriter stringStream = new StringWriter();
+
+        // Use the connection
+        stringStream.Write("Species: " + Species + "\n");
+        stringStream.Write("Type 1: " + Type1 + "\n");
+        stringStream.Write("Type 2: " + Type2 + "\n");
+        stringStream.Write(BaseStats);
+
+        string result = stringStream.ToString();
+
+        // Close the connection
+        stringStream.Close();
+
+        return result;
     }
 }

@@ -12,11 +12,17 @@ public class GenerationController : MonoBehaviour
     public TMP_InputField levelInput;
     public TMP_Dropdown genderDropdown;
     public TMP_Dropdown natureDropdown;
+    public TextMeshProUGUI baseHPText;
     public TMP_InputField allocatedHPInput;
+    public TextMeshProUGUI baseATKText;
     public TMP_InputField allocatedATKInput;
+    public TextMeshProUGUI baseDEFText;
     public TMP_InputField allocatedDEFInput;
+    public TextMeshProUGUI baseSPATKText;
     public TMP_InputField allocatedSPATKInput;
+    public TextMeshProUGUI baseSPDEFText;
     public TMP_InputField allocatedSPDEFInput;
+    public TextMeshProUGUI baseSPDText;
     public TMP_InputField allocatedSPDInput;
     public TMP_InputField[] moveInputs;
     public TMP_InputField[] abilityInputs;
@@ -188,5 +194,41 @@ public class GenerationController : MonoBehaviour
     public void SetRandomNature()
     {
         natureDropdown.value = UnityEngine.Random.Range(0, natureDropdown.options.Count);
+    }
+
+    public void ShowPokemonInfo(string pokemon)
+    {
+        PokemonSpecies species = dataController.ParseSpecies(pokemon);
+
+        if (species != null)
+        {
+            jsonTextbox.text = species.ToString();
+            baseHPText.text = species.BaseStats.Health.ToString();
+            baseATKText.text = species.BaseStats.Attack.ToString();
+            baseDEFText.text = species.BaseStats.Defense.ToString();
+            baseSPATKText.text = species.BaseStats.SpeAttack.ToString();
+            baseSPDEFText.text = species.BaseStats.SpeDefense.ToString();
+            baseSPDText.text = species.BaseStats.Speed.ToString();
+        }
+    }
+
+    public void ShowMoveInfo(string moveName)
+    {
+        Move move = dataController.ParseMove(moveName);
+
+        if (move != null)
+        {
+            jsonTextbox.text = move.ToString();
+        }
+    }
+
+    public void ShowAbilityInfo(string abilityName)
+    {
+        Ability ability = dataController.ParseAbility(abilityName);
+
+        if (ability != null)
+        {
+            jsonTextbox.text = ability.ToString();
+        }
     }
 }

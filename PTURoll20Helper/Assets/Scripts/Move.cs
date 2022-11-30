@@ -48,4 +48,27 @@ public class Move
 
         return jsonString;
     }
+
+    public override string ToString()
+    {
+        // Create the connection
+        StringWriter stringStream = new StringWriter();
+
+        // Use the connection
+        stringStream.Write("Name: " + MoveName + "\n");
+        stringStream.Write("Type: " + MoveType + "\n");
+        stringStream.Write("DType: " + Category + "\n");
+        stringStream.Write("DB: " + DamageBase + "\n");
+        stringStream.Write("Freq: " + Frequency + "\n");
+        stringStream.Write("AC: " + Accuracy + "\n");
+        stringStream.Write("Range: " + Range + "\n");
+        stringStream.Write("Effects: " + Effects);
+
+        string result = stringStream.ToString();
+
+        // Close the connection
+        stringStream.Close();
+
+        return result;
+    }
 }
