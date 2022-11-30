@@ -32,8 +32,7 @@ public class DataController : MonoBehaviour
     // courtesy of stackoverflow https://stackoverflow.com/questions/632475/regex-to-pick-characters-outside-of-pair-of-quotes
     private Regex regex = new Regex(",(?=(?:[^\"]|\"[^\"]*\")*$)");
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         // load file data into each of the unparsed dictionaries
 
@@ -211,5 +210,20 @@ public class DataController : MonoBehaviour
         abilityData.Add(name, ability);
 
         return ability;
+    }
+
+    public IEnumerable<string> GetPokemonNames()
+    {
+        return speciesDataUnparsed.Keys;
+    }
+
+    public IEnumerable<string> GetMoveNames()
+    {
+        return moveDataUnparsed.Keys;
+    }
+
+    public IEnumerable<string> GetAbilityNames()
+    {
+        return abilityDataUnparsed.Keys;
     }
 }
